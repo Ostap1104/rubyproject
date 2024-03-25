@@ -7,4 +7,10 @@
   <%= link_to "Back to films", films_path %>
 
   <%= button_to "Destroy this film", @film, method: :delete %>
+
+  
+<% @film.comments.each do |comment| %>
+  <p><%=comment.body %></p>
+  <%end%>
+<%= render partial: 'comments/form', locals: {film: @film} %>
 </div>
