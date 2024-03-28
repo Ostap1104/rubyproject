@@ -9,8 +9,8 @@
   <%= button_to "Destroy this film", @film, method: :delete %>
 
   
-<% @film.comments.each do |comment| %>
-  <p><%=comment.body %></p>
+<% @film.comments.includes(:user).each do |comment| %>
+  <p><%=comment.body %>(by <%= comment.user.email%>) <%= link_to('edit', edit_film_comment_path(comment, film_id: comment.commentable.id)) %></p>
   <%end%>
 <%= render partial: 'comments/form', locals: {film: @film} %>
 </div>
