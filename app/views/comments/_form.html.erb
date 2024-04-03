@@ -1,0 +1,4 @@
+<%= form_for :comment, url: film_comments_path(film) do |form| %>
+    <%= form.text_field :body %>
+    <%=form.submit%>
+<% end %>
