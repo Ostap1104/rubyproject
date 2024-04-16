@@ -2,7 +2,7 @@ class CommentsController < ApplicationController
     before_action :film, only: :create
     before_action :find_comment, except: :create
     def create
-        @comment = Comment.new(comment_params)
+      @comment = Comment.new(comment_params.merge!(user: current_user))
 
         if @comment.save
             redirect_to film_path(@film)
@@ -42,8 +42,8 @@ class CommentsController < ApplicationController
 
     private
     def comment_params
-        params.require(:comment).permit(:body)
-        .merge!(commentable: film, user: current_user)
+        params.require(:comment).permit(:body, :commentable_id, :commentable_type)
+        # .merge!(commentable: film, user: current_user)
     end
 
     def film
