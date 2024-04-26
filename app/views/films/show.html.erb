@@ -26,9 +26,9 @@
 <% @film.comments.includes(:user).each do |comment| %>
   <%=turbo_frame_tag(dom_id(comment)) do %>
   <p><%=comment.body %>(by <%= comment.user.email%>)
-        <div class='container small'>
-        <%= render partial: 'comments/form', locals: { comment_to: comment } %>
-      </div>
+    <div>
+      <%= render partial: 'comments/form', locals: { comment_to: comment } %>
+    </div>
    <% if policy(comment).edit?%>
   <%= link_to('edit', edit_film_comment_path(comment, film_id: comment.commentable.id)) %> 
    <% end %>
@@ -36,6 +36,13 @@
   <%= link_to('destroy', film_comment_path(comment, film_id: comment.commentable), method: :delete, data: {turbo_method: :delete}) %> 
   
     <% end %>
+    <div class='container small'>
+        <% comment.comments.includes(:user).each do |sub_comment| %>
+          <%= sub_comment.body %> (by <%= sub_comment.user.email %>)
+          <br/>
+        <% end %>
+        <%# <%= render partial: 'comments/form', locals: { comment_to: comment } %>
+      </div>
     </p>
   <%end%>
 <%end%>

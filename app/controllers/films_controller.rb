@@ -71,25 +71,28 @@ class FilmsController < ApplicationController
   end
 
   def omdb_import
-    @omdb = OmdbClient.new
+    # @omdb = OmdbClient.new
 
-    @omdb_film = @omdb.find_by_id(params[:omdb_id])
+    # @omdb_film = @omdb.find_by_id(params[:omdb_id])
 
-    @film = Film.new(
-      name: @omdb_film['Title'],
-      cover_image_url: @omdb_film['Poster'],
-      year_of_creation: @omdb_film['Year'],
-      description: @omdb_film['Plot'],
-      duration: @omdb_film['Runtime'],
-      director: @omdb_film['Director'],
-      genres: @omdb_film['Genre'].present? ? @omdb_film['Genre'].split(', ') : []
-    )
-    if @film.save
-      redirect_to @film
-    else
-      flash[:error] = @film.errors.full_messages.join(", ")
-      render :omdb_search
-    end
+    # @film = Film.new(
+    #   name: @omdb_film['Title'],
+    #   cover_image_url: @omdb_film['Poster'],
+    #   year_of_creation: @omdb_film['Year'],
+    #   description: @omdb_film['Plot'],
+    #   duration: @omdb_film['Runtime'],
+    #   director: @omdb_film['Director'],
+    #   genres: @omdb_film['Genre'].present? ? @omdb_film['Genre'].split(', ') : []
+    # )
+    # if @film.save
+    #   redirect_to @film
+    # else
+    #   flash[:error] = @film.errors.full_messages.join(", ")
+    #   render :omdb_search
+    # end
+    FilmsImportJob.perform_later(params[:omdb_id], current_user)
+    flash[:notice] = 'Movie will be imported soon. Thanks!'
+    redirect_to films_path
   end
 
   private

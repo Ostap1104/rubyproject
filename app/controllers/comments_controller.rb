@@ -1,6 +1,7 @@
 class CommentsController < ApplicationController
     before_action :film, only: :create
     before_action :find_comment, except: :create
+  
     def create
       @comment = Comment.new(comment_params.merge!(user: current_user))
 
@@ -52,5 +53,6 @@ class CommentsController < ApplicationController
 
     def find_comment
       @comment = Comment.find(params[:id])
+      authorize @comment
     end
 end
